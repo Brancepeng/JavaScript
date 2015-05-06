@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>寄生式继承</title>
+    <script type="text/javascript">
+        //思路和构造函数,工厂模式类似.即创建一个仅用于封装继承过程的函数,该函数在内部以某种方法来增强对象,
+        //最后再像真的是它做了所有工作一样返回对象.
+        function createAnother(original){
+            var clone = Object(original);//通过调用函数创建一个新对象.
+            clone.sayHi = function (){//以某种方式来增强对象
+                alert('Hi');
+            }
+            return clone;//返回这个对象
+        }
+
+        var person = {
+            name : 'brancepeng',
+            friends : ['Jack','Hanmeimei','Rose']
+        }
+
+        var anotherPerson = createAnother(person);
+        anotherPerson.sayHi();
+        //上面的例子基于person对象返回一个新对象anotherperson,新对象不仅具有person的所有属性和方法,
+        //还有自己的sayHi()方法.
+        //注意:任何能够返回新对象的函数都适用于此模式.
+    </script>
+</head>
+<body>
+
+</body>
+</html>

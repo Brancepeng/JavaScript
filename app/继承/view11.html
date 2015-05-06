@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>call方法(伪造对象或者经典继承)</title>
+    <script type="text/javascript">
+        //测试call方法
+        function class1(){
+             text ='123';
+            this.showText = function (text){
+                alert(text);
+            }
+        }
+        function class2(){
+            class1.call(this);//这里意思是使用class1对象代替this对象,那么class2中就有了class1中的所有属性和方法.
+        }
+        var c2 = new class2();
+        c2.showText('cc');
+    </script>
+</head>
+<body>
+
+</body>
+</html>

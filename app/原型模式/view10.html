@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型模式举例</title>
+    <script type="text/javascript">
+
+        //说明:使用原型对象的好处是可以让所有对象实例共享它的所有属性和方法;即不必再构造函数中添加对象实例的属性和方法,
+        //可以直接将信息添加到原型对象中;
+        function Person(){
+
+        }
+        Person.prototype.name = "brancepeng";
+        Person.prototype.age = 12;
+        Person.prototype.job = "Software Engineer";
+        Person.prototype.sayName = function(){
+            alert(this.name);
+        }
+        var person1 = new Person();
+        person1.sayName();
+        var person2 = new Person();
+        person2.sayName();
+        alert(person1.sayName == person2.sayName);//true,说明person1和person2访问的是同一个sayName()函数和同一组属性
+
+        person1.name = "Nicholas";
+        alert(person1.name);
+        alert(person2.name);
+        alert(person1.sayName == person2.sayName);//false,这里,打印person1.name时,会首先在实例中查找该属性,
+        // 若没有,才会向上搜索原型,但是在Chrome中结果为true!!!!
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>动态原型模式</title>
+    <script type="text/javascript">
+        //把所有信息都封装在构造函数中,而通过早构造函数中初始化原型,保持了同时使用构造函数和原型烦人优点.
+        //换句话说,可以通过某个应该存在到的方法是否有效,来决定是否需要初始化原型.
+        function Person(name,age,job){
+            //属性
+            this.name = 'brancepeng';
+            this.age = 23;
+            this.job = 'Software Engineer';
+            //fangfa
+            if(typeof  this.sayName != 'function'){//这里通过添加判断只在sayName()方法不存在的情况下,才会建行它添加到原型中.
+                Person.prototype.sayName = function (){
+                    alert(this.name);
+                }
+            }
+        }
+        var friend = new Person('Bluce',33,"Doctor");
+        friend.sayName();
+    </script>
+</head>
+<body>
+
+</body>
+</html>

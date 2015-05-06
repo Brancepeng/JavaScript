@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>构造函数与原型复合使用</title>
+    <script type="text/javascript">
+        //原型用于定义方法和共享的属性,而构造函数用于定义实例属性,这样,每个实例会有自己的一份实力属性副本,\
+        //但同时又共享着对方法的引用.
+        function Person(name,age,job){
+            this.name = 'barncepeng';
+            this.age = 23;
+            this.job = 'Software Engineer';
+            this.friends = ['Nishoas','Blake'];
+        }
+
+        Person.prototype = {
+            constructor : Person,
+            sayName :function (){
+                alert(this.name);
+            }
+        }
+
+        var person1 = new Person('Hanmeimei',22,'Software Engineer');
+        var person2 = new Person('Lili',24,'Doctor');
+        person1.friends.push('Lina');
+        alert(person1.friends);
+        alert(person2.friends);
+        alert(person1.friends == person2.friends);//false
+        alert(person1.sayName == person2.sayName);//true
+    </script>
+</head>
+<body>
+
+</body>
+</html>

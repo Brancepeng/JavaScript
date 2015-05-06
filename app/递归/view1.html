@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>递归</title>
+    <script type="text/javascript">
+        //下面定义一个阶乘
+        function factorial (num){
+            if (num<=1){
+                return 1;
+            }else{
+                return num*factorial(num-1);
+            }
+        }
+        var anotherFactorial = factorial;
+        factorial = null;
+        alert(anotherFactorial(5));//出错!
+        //原来指向factorial()函数的有两个引用,当把factorial置为null时,就只剩下anotherFactorial了,但在调用
+        //anotherFactorial()函数时,必须执行factorial().而factorial被置为null,所以报错.
+        //可以把num*factorial(num-1)中的factorial改为arguments.callee,arguments.callee是一个指向正在执行函数的指针.
+        //或者也可以将上面的例子改为:
+        var factorial = (
+            function f(num){
+                if (num<=1){
+                    return 1;
+                }else{
+                    return num*f(num-1);
+                }
+            }
+        );
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型模式2举例</title>
+    <script type="text/javascript">
+        function Person(){}
+       // var friend = new Person();
+        //创建一个字面量形式的原型对象
+        Person.prototype = {
+            name : "brancepeng",
+            age : "12",
+            friends : ["Nicholas","Jack"],
+            job : "Software Engineer",
+            sayName : function (){
+                alert(this.name);
+            }
+        };
+        //friend.sayName();//error,因为先创建一个Person的实例,然后又重写了其原型对象,在调用friend.sayName()时
+        //发生错误,因为friend指向的原型中不包含sayName属性(指原来的原型).
+
+
+        var person1 = new Person();
+        var person2 = new Person();
+        person1.friends.push("Rose");
+        alert(person1.friends);
+        alert(person2.friends);//由于例子中friends数组存在于Person.prototype中,而非person1中,故在person1中
+        //修改Person.prototype时,会在person2中表现出来.两者指向同一个数组Person.prototype.
+    </script>
+</head>
+<body>
+
+</body>
+</html>

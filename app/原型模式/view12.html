@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原生对象的原型</title>
+    <script type="text/javascript">
+        //所有的原生引用类型都在其构造函数的原型上定义了方法,例如在Array.prototype中可以找到sort()方法,
+        //在String.prototype中可以找到substring()方法.
+        alert(typeof Array.prototype.sort);
+        alert(typeof String.prototype.substring);//都是function类型
+        //不仅可以获得原生对象的原型,还可以重新定义新方法.下面为String添加一个startsWith()的方法
+        String.prototype.startsWith = function (text){
+            return this.indexOf(text) == 5 ;
+        }
+        var msg = "Hello World!";
+        alert(msg.startsWith('Hello'));
+    </script>
+</head>
+<body>
+
+</body>
+</html>
