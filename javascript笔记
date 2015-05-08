@@ -5,3 +5,24 @@
 更新,并且返回新增的节点.
 3.javascript听课笔记:
 略...才发现,上班以后,没有更多的时间学习了...
+4.什么是JSON?
+要理解它,最重要的一点是,它是一种数据格式.不是一种编程语言.虽然具有相同的语法格式,但JSON并不从属于Javascript,
+而且,并不是只有Javascript才能使用JSON，毕竟JSON只是一种数据格式.很多语言都有针对ＪＳＯＮ的解析器和序列化器。
+5.JSON的解析与序列化：JSON之所以流行，拥有与javascript类似语法并不是全部原因，更重要的是可以把json数据解析为有用的
+ javascript对象。
+ 6.JSON对象
+ 早起的解析器基本上就是使用javascript中的eval（）函数。由于JSON是javascript语法的子集，
+ 因此eval（）函数可以解析，解释，并且返回javascript对象和数组。
+ 然后，ECMAScript5对解析JSON的行为进行了规范，定义了全局对象JSON。
+JSON对象有两个方法：stringify()和parse().这两个方法分别用用于把javascript对象序列化为JSON字符串,和把JSON字符串
+解析为原生的javascript值.方法调用形式为:JSON.stringify(),和JSON.parse().
+7.在JSON和javascript对象的转化中,什么叫做序列化?什么叫做解析?
+.....
+
+
+
+
+
+
+8.Ajax:Asynchronous Javascript and XML的缩写.这一技术能够向服务器请求数据而无需卸载页面,会带来更好的用户体验.
+Ajax的技术核心是XMLHttpRequest对象(简称XHR).
