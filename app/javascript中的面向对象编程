@@ -1,0 +1,428 @@
+
+
+
+javscript1.0最初是由网景公司的Brendan Eich在1995年5月花了十天搞出来的，Eich的目标是设计出一种即轻量又强
+大的语言，所以Eich充分借鉴了其他编程语言的特性，比如java的语法（syntax）,以及Scheme的函数（function），
+Self的原型继承（prototypal inheritance）,Perl的正则表达式等等。
+
+总之.javascript设计者当初的思路是这样的：
+
+1.借鉴C语言的基本语法；
+
+2.借鉴java语言的数据类型；
+
+3.借鉴Scheme语言，将函数提升为“一等公民”（first class）的地位；
+
+简单说明一下：什么是“一等公民”？
+在编程语言中，所谓’第一等公民‘（first class）指的是函数和其他数据类型一样，可以赋值给其他变量，也可以作为参数，
+传入另一个函数，或者作为别的函数的返回值。
+举例来说：下面代码中的print函数就是一个函数，可以作为另一个函数的参数。
+
+var print = function(i){console.log(i);}
+
+ [1,2,3].forEach(print);
+
+
+4.借鉴Self语言，使用基于原型（prototype）的继承机制。
+
+
+所以，javascript语言实际上是两种语言风格的混合产物。---简化的函数式编程+简化的面向对象编程。这是由Brendan Eich
+（函数式编程）+与网景公司（面向对象编程）共同决定的。
+
+
+作者Brendan Eich如是说道：
+
+"与其说我爱Javascript，不如说我恨它。它是C语言和Self语言一夜情的产物。十八世纪英国文学家约翰逊博士说得好：
+'它的优秀之处并非原创，它的原创之处并不优秀。'（the part that is good is not original, and the part
+ that is original is not good.）"
+
+
+ 那么，为什么继承了self语言的继承机制而不是Java的类机制？首先，我们要知道：
+
+ Self的原型机制是靠运行时的语义；
+
+ java的类机制是靠编译时的类语法。
+
+
+ Javascript1.0的功能相对简单，为了在今后不断丰富javascript本身功能的同时保持旧代码的兼容性，javascript通过
+ 改变运行时的支持来增加新功能，而不是通过修改javascript的语法，这就保证了旧代码的兼容性。这也就是javascript选
+ 择基于运行时的原型机制的原因。
+
+
+wikipedia这样描述到：JavaScript is classified as a prototype-based scripting language with dynamic
+ typing and first-class functions。这些特性使得javascript是一种多范式的解释性编程语言，支持面向对象,命令
+ 式(imperative), 函数式(functional)编程风格。
+
+
+
+ 对象：
+
+
+ 在javascript中，除了Undefined, Null, Boolean, Number, String这几个简单类型外，其他的都是对象。
+ 数字、字符串、布尔值这些简单类型都是不可变量，对象是可变的键值对的集合(mutable keyed conllections)，对象
+ 包括数组Array、正则表达式RegExp、函数Function，当然对象Object也是对象。
+
+ 对象在javascript中说白了就是一系列的键值对。键可以是任意字符串，包括空串；值可以是任何值。在javascript中是没有
+ 类的概念(class-free)的，但是它有一个原型链(prototype linkage)。javascript对象通过这个链来实现继承关系。
+
+
+ javascript中有一些预定义对象，像是Object，function,Date,Number,String,Array等。
+
+ 字面量(literal)
+ javascript中的每种类型的对象都可以采用字面量(literal)的方式创建。
+ 对于Object对象，可以使用对象字面量(Object literal)来创建，例如：
+
+
+ var empty_object = {};//创建了一个空对象
+ //创建了一个有两个属性的对象
+ var stooge = {
+     "first-name": "Jerome",
+     "last-name": "Howard"
+ };
+
+
+
+ 当然，也可以用new Object()或Object.create()的方式来创建对象。
+ 对于Function、Array对象都有其相应的字面量形式，后面会讲到，这里不再赘述。
+
+
+ 原型链：
+
+
+ javascript中每个对象都隐式含有一个[[prototype]]属性，这是ECMAScript的记法，目前各大厂商在实现自己
+ 的javascript解释器时，采用的记法是__proto__(中间没有空格)，也就是说每个对象每个都隐式包含一个
+
+_ _proto_ _属性，举个例子：
+
+
+var foo = {x:10,y:20};
+
+
+那么，foo这个对象在内存中的存储结构是这样的：参见图片：foo对象.png
+
+
+当有多个对象时：通过__proto属性就能够形成一条原型链。看下面的例子：
+
+
+var a = {
+    x: 10,
+    calculate: function (z) {
+        return this.x + this.y + z;
+    }
+};
+var b = {
+    y: 20,
+    __proto__: a
+};
+var c = {
+    y: 30,
+    __proto__: a
+};
+// call the inherited method
+b.calculate(30); // 60
+c.calculate(40); // 80
+
+
+上面的代码在申明对象b，c时，指明了他们的原型为对象a，（a的原型默认指向Object.prototype,
+Object.prototype这个对象的原型指向null.）这几个对象在内存中的结构大致是这样的：参见图片：prototype chain.png
+
+
+这里需要说明一点:__proto__属性，并不是ECMAScript的规定，而是在javascript早期，ecmascript没有明确说明如何访
+问一个对象的原型，所以各大实现商采用了约定俗成的__proto__记法。
+
+
+在ECMAScript 3.1及以后的版本中，为内置对象Object添加了访问设置、对象原型的方法：
+
+getPropertyOf()，用于获取对象的原型：syntax:Object.getPrototypeOf(obj)
+
+create()，在创建对象时设置对象的原型。
+
+
+举个例子：
+
+var proto = {};
+
+var obj = Object.create(proto); （大概等价为obj = new proto()）//设置obj对象的原型为proto.
+
+
+Object.getPrototypeOf(obj) === proto　;//true
+
+
+
+__proto  vs   prototype
+
+
+除了我们这里说的__proto__属性，相信大家平常更常见的是prototype属性。比如，Date对象中没有加几天的函数，那么我们
+可以这么做：
+
+
+Date.prototype.addDays = function(n) {
+    this.setDate(this.getDate() + n);
+}
+
+
+那么所有通过new Date()得到的对象就拥有addDays方法了（后面讲解继承是会解释原因）。那么__proto__属性与prototype属
+性有什么区别呢？
+
+
+javascript的每个对象都有__proto属性，但是只有函数对象有prototype属性。
+
+那么在函数对象中，这两个属性有什么区别呢？
+
+
+1.__proto__表示该函数对象的原型。
+
+2.prototype表示使用new来执行该函数时（这种函数一般称为构造函数），新创建的对象的原型。例如;
+
+
+var d = new Date();
+
+d.__proto === Date.prototype; //true
+
+
+Date.__proto === Object.__proto  //true
+
+instanceof
+
+syntax：obj instanceof constructorFunction
+
+用于检测constructorFunction.prototype对象是否在obj的原型链中。（换句话，obj是否是constructorFunction的实例）
+
+如果我们实现 instanceof 类似的函数：
+
+function instanceof （obj）{
+
+    if(obj != null){
+       if(obj == constructorFunction.prototype){
+            return true;
+            obj = Object.getPrototypeOf(obj);
+       }
+        return false;
+    }
+}
+
+下面是一个使用instanceof的例子：
+
+
+function Car(make, model, year) {
+  this.make = make;
+  this.model = model;
+  this.year = year;
+}
+var mycar = new Car("Honda", "Accord", 1998);
+mycar instanceof Car;    // true，因为mycar.__proto__ === Car.prototype
+mycar instanceof Object; // true，因为mycar.__proto__.__proto__ === Object.prototype
+
+
+在javascript中，原型和函数是最重要的两个概念，上面说完了原型，下面说说对象。
+
+
+函数对象Function
+
+在javascript中，函数是“第一等公民”。
+
+
+首先，函数在javascript中无非也是个对象，可以作为value赋值给某个变量，唯一不同的是函数能够被执行。
+
+使用对象字面量方式创建的对象的__proto__属性指向Object.prototype(Object.prototype的__proto__属性指向null)；
+
+使用函数字面量创建的对象的__proto__属性指向Function.prototype(Function.prototype对象的__proto__属性指向Object.prototype)。
+
+函数对象除了__proto__这个隐式属性外，还有两个隐式的属性：
+
+1.函数的上下文（functoin's context）
+
+2.实现函数的代码（the code that implements the function's behavior）
+
+
+和对象字面量一样，我们可以使用函数字面量来创建函数。类似于下面的方式：
+
+//使用字面量方式创建一个函数，并赋值给add变量
+var add = function (a, b) {
+    return a + b;
+};
+
+
+
+函数调用与this
+
+
+一个函数在被调用时，除了申明的参数外，还会隐式传递两个额外参数：this，arguments。
+
+
+1.method invocation pattern. 当函数作为某对象一个属性调用时，this指向这个对象。this赋值过程发生在
+函数调用时（也就是运行时），这叫做late binding.
+
+
+2.method invocation pattern. 当函数不作为属性调用时，this指向全局对象（这里的全局对象依赖宿主环境而定，
+在浏览器中是window对象），这个是设计上的错误。正确的话，内部函数的this应该指向外部函数。不过可以通过在内部
+定义一个变量来解决这个问题。
+
+举个例子：（请自动运行这两段代码，检测obj.value的值。）
+
+代码片段一：
+
+    var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+　　　　getNameFunc : function(){
+　　　　　　return function(){
+　　　　　　　　return this.name;
+　　　　　　};
+　　　　}
+　　};
+　　alert(object.getNameFunc()());
+
+
+
+object.getNameFunc()执行后，返回结果为：
+function(){
+return this.name;
+}
+}
+这里this并非作为对象的属性存在。故this指向window。
+
+
+代码片段二：
+
+    var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+　　　　getNameFunc : function(){
+　　　　　　var that = this;
+　　　　　　return function(){
+　　　　　　　　return that.name;
+　　　　　　};
+　　　　}
+　　};
+　　alert(object.getNameFunc()());
+
+
+第一次运行时，执行函数object.getNameFunc()；此时this，应该作为object对象的一个属性存在。故that指向这
+个对象object，返回结果为：
+            function(){
+　　　　　　　　return that.name;
+　　　　　　  };
+故结果为“My Object”.
+
+
+3.construct invocation pattern .javascsript是一门原型继承型语言，这就意味着对象可以直接从其他对象中继承属性。
+
+这和java中的继承不一样。但是javascript提供了一种类似与java创建对象的语法。当一个函数用new来调用时，this指向新创
+建的对象。这时的函数通常称为构造函数。
+
+
+4.apply invocation pattern.
+
+使用函数的apply()方法来执行时，this指向apply（）方法的第一个参数。
+
+除了this外，函数在调用是额外传入的另一个参数是arguments。
+
+它是函数内部的一个变量，包含函数调用处的所有参数，甚至包含函数定义时没有的参数。
+
+var sum = function () {
+    var i, sum = 0;
+    for (i = 0; i < arguments.length; i += 1) {
+        sum += arguments[i];
+    }
+    return sum;
+};
+sum(4, 8, 15, 16, 23, 42); // 108
+
+
+需要注意的是，这里的arguments不是一个数组，它只是一个有length属性的类数组对象(Array-like)
+，它并不拥有数组的其他方法。总之，它是一个对象。
+
+
+数组对象：是一种在内存中线性分配的数据结构，通过下表计算出元素偏移量，从而取出元素。数组应该是一种是一种快速存取的数据结构，但是在
+javascript中并不具备这种特性。
+
+数组在javascript中是一个传统的具有数组特性的对象，这种对象把数组下表转为字符串，然后把字符串作为对象的key值，
+最后取出key值对应的value。（这又一次说明了对象在javascript中就是一系列键值对）。
+
+
+虽然javascript中的数组没有传统语言中的数组那么快，但是由于javascript是弱类型的语言，所以javascript中的数组可以存放任何值。
+此外Array有很多实用的方法，大家可以去MDN Array查看。
+
+
+javascript也为数组提供了很方便的字面量(Array Literal)定义方式：
+
+var arr = [1,2,3]
+
+通过数组字面量创建的数组对象的__proto__指向Array.prototype。
+
+
+继承inheritance
+
+在java中，对象是某个类的实例，一个类可以从另外一个类中继承。但是在基于原型链的javascript中，对象可以直接从另一个对象创建。
+
+在上面讲解对象时，我们知道了在创建一个对象时，该对象会自动赋予一个__proto__属性，使用对象字面量(Literal)来创建
+对象时，javascript解释器自动为__proto__赋值。当我们在javascript使用new操作符创建对象时，javascript解释器
+在调用构造函数时，会执行类似于下面的语句：
+
+this.__proto = {constructor:this};
+
+新创建的对象搜会有一个__proto属性。这个属性有一个constructor属性。并且这个属性指向这个新对象。举个例子：
+
+var d = new Date();
+
+d.__proto.contructor === Date  //true;
+
+
+如果new不是一个操作符，而是一个函数：那么他的实现类似这样：
+
+Function.prototype.new  = function(){
+
+    //create an object that inherits from the constructor's prototype.
+    var that = Object.create(this.prototype);
+
+    //Invoker the constructor ,binding -this- to the new object.
+
+    var other = this.apply(that,arguments);
+
+    //  If its return value isn't an object,substitute the new object.
+
+    return (typeof other === 'object' && other) ||that ;
+
+
+}
+
+
+
+之前也说了，基于原型的继承机制是根据运行时的语义决定的，这就给了我们很大的便利。比如。我们想
+
+为所有的Array添加一个map函数，那么，我们可以这么做：
+
+Array.prototype.map = function(f){
+
+    var newArr = [];
+
+    for(i=0;i<this.length;i++){
+
+        newArr.push(f(this[i]));
+
+    }
+
+    return  newArr;
+}
+
+因为所有的数组对象的__proto__属性都指向这个Array.prototype对象，所以我们增加这个方法，所有的数组就都拥有这个方法。
+
+
+javascript解释器会沿着原型链去查看某个对象或者方法，如果想查看某个对象的是否有某个属性，可以使用
+
+Object.prototype.hasOwnProperty()方法。
+
+
+通过上面多次讲解，希望大家对对象在javascript中就是一系列的键值对、原型与函数这三个概念有更加深刻的认识，使
+用javascript来写前端、后端与脚本。在React.js 2015大会上，Facebook公布了即将开源的React Native，这意味
+着今后我们可以用javascript来写IOS、Android的原生应用了，这可真是learn-once, write-anywhere。相信随
+着ECMAScript 6的发布，javascript这门语言还会有一系列翻天覆地的变化。
+
+
+
+
+
+
+
+
