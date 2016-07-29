@@ -1,0 +1,137 @@
+之前讲到软件设计模式，下面主要讲到软件设计模式之MVC：
+
+其实，MVC在没有被GOF当做一种【模式】来看待，而是把它当做“一组用于构建用户界面的类集合”。
+在他们看来，它其实是其它三个经典的设计模式的演变：观察者模式(Observer)(Pub/Sub), 策略模式(Strategy)和
+组合模式(Composite)。根据MVC在框架中的实现不同可能还会用到工厂模式(Factory)和装饰器(Decorator)模式。
+
+正如我们多讨论的，models表示数据模型，而views作为处理屏幕上展现给用户的内容。因此，MVC在核心通讯上
+是基于推送/订阅模型，当一个model变化时，它对其他应用模块发出更新通知(“publishes”)，订阅者通常是一个
+Controller，然后更新对应的view，【观察者——这种自然的观察关系促进了多个view关联到同一个 model】。
+（注：上面这段话很重要。）
+
+对于感兴趣的，想了解更多的关于解耦性的MVC（根据不同的实现），这种模式的目标之一就是在一个主题（个人理解是一个model对象）和他的观察者之间
+建立一个一对多的关系，当这个主体改变的时候，它的观察者也会得到更新。而views和controllers的关系稍微有点不同，
+controllers帮助views对不同用户的输入做出不同的响应，是一个非常好的策略模式列子。
+
+所以，知道为什么MVC没有被GOF当做一种【模式】来看待了把。因为它实际上是三种模式的合体！
+
+最后，说说，为什么大家把框架，架构，设计模式这些概念搞混了。
+
+框架：
+
+框架通常是代码重用，架构则介于这两者之间，部分代码重用，部分设计重用，有时候分析也可以重用，框架与设计模式
+虽然相似，但却有着根本的不同。
+
+设计模式：
+
+是对某种场景中反复出现的问题，以及解决该问题的方案的描述，它比框架更抽象。
+
+
+不同之处：
+
+1.框架可以用代码表示，也能直接执行或者复用，而对模式而言只有只有实例才能用代码表示；
+2.设计模式是比框架更小的元素，一个框架中往往含有一个或者多个设计模式；
+3.框架总是针对某一个特定的场景，但模式可以在多个场景中适用；
+4.可以说，框架是软件，而设计模式是软件的知识。
+
+框架模式有哪些？
+
+MVC、MTV、MVP、CBD、ORM等等；
+
+
+框架有哪些？
+C++语言的QT、MFC、gtk，Java语言的SSH 、SSI，php语言的 smarty(MVC模式)，python语言的django(MTV模式)等等
+
+设计模式有哪些？
+
+工厂模式、适配器模式、策略模式等等
+
+
+总结：
+框架是大智慧，用来对软件设计进行分工；设计模式是小技巧，对具体问题提出解决方案，以提高代码复用率，降低耦合度。
+
+
+以上理解来自网络。下面是来自维基百科（Wiki）：
+
+Model–view–controller (MVC) is a software architectural pattern（软件框架模式） for implementing
+user interfaces on computers.
+
+Traditionally used for desktop graphical user interfaces (GUIs), this architecture has
+become extremely popular for designing web applications.
+
+Components（组成部分）：
+
+
+The central component of MVC, the model, captures the behavior of the application in terms of its
+problem domain, independent of the user interface.
+
+The model directly manages the data, logic and rules of the application.
+
+A view can be any output representation of information, such as a chart or a diagram. Multiple
+views of the same information are possible, such as a bar chart for management and a tabular view
+for accountants.
+
+The third part, the controller, accepts input and converts it to commands for the model or view.
+
+
+Interactions：
+
+In addition to dividing the application into three kinds of components, the model–view–controller
+design defines the interactions between them.[7]
+
+A model stores data that is retrieved according to commands from the controller and displayed in
+the view.
+
+A view generates new output to the user based on changes in the model.
+
+A controller can send commands to the model to update the model's state (e.g. editing a document).
+It can also send commands to its associated view to change the view's presentation of the
+model (e.g. by scrolling through a document).
+
+The MVC pattern has subsequently evolved, giving rise to variants such as
+hierarchical model–view–controller (HMVC), model–view–adapter (MVA),
+model–view–presenter (MVP), model–view–viewmodel (MVVM), and others that
+adapted MVC to different contexts.（所以任何框架模式说是MVC都没错，以为其他框架都是由MVC模式衍生而来的。）
+
+The use of the MVC pattern in web applications exploded in popularity after the introduction of
+Apple's WebObjects which was originally written in Objective-C (that borrowed heavily from Smalltalk)
+and helped enforce MVC principles. Later, the MVC pattern became popular with Java developers when
+WebObjects was ported to Java. Later frameworks for Java such as Spring continued the strong bond
+between Java and MVC. The introduction of the frameworks Rails (for Ruby) and Django (for Python),
+both of which had a strong emphasis on rapid deployment, increased MVCs popularity outside the
+traditional enterprise environment in which it has long been popular. MVC web frameworks now hold
+large market shares relative to non-MVC web toolkits.
+（这也就是为什么以前好的app总是先在iphone中出现的原因。因为MVC框架模式是Objective-C首先用到商业生产中。）
+
+
+Although originally developed for desktop computing, model–view–controller has been widely adopted
+as an architecture for World Wide Web applications in major programming languages. Several commercial
+and noncommercial web frameworks have been created that enforce the pattern. These software
+frameworks vary in their interpretations, mainly in the way that the MVC responsibilities are
+divided between the client and server.
+
+
+Early web MVC frameworks took a thin client approach that placed almost the entire model, view
+and controller logic on the server. This is still reflected in popular frameworks such as Ruby
+on Rails, Django, ASP.NET MVC and Express.In this approach, the client sends either hyperlink
+requests or form input to the controller and then receives a complete and updated web page
+(or other document) from the view; the model exists entirely on the server.[14] As client
+technologies have matured, frameworks such as AngularJS, EmberJS, JavaScriptMVC and Backbone
+have been created that allow the MVC components to execute partly on the client (also see Ajax).
+
+下面是阮一峰老师的对于MVC架构模式的理解。
+
+MVC是三个单词的首字母缩写，它们是Model（模型）、View（视图）和Controller（控制）。
+这个模式认为，程序不论简单或复杂，从结构上看，都可以分成三层。
+
+1）最上面的一层，是直接面向最终用户的"视图层"（View）。它是提供给用户的操作界面，是程序的外壳。
+2）最底下的一层，是核心的"数据层"（Model），也就是程序需要操作的数据或信息。
+3）中间的一层，就是"控制层"（Controller），它负责根据用户从"视图层"输入的指令，选取"数据层"中的数据，
+然后对其进行相应的操作，产生最终结果。
+
+这三层是紧密联系在一起的，但又是互相独立的，每一层内部的变化不影响其他层。每一层都对外提供接口（Interface），
+供上面一层调用。这样一来，软件就可以实现模块化，修改外观或者变更数据都不用修改其他层，大大方便了维护和升级。
+
+
+
+
