@@ -1,0 +1,31 @@
+I like JavaScript because it is one of the most flexible languages in the world. It supports wide
+range of the programming styles and techniques, but such flexibility comes with danger - it is
+very easy for the JavaScript project to become a messy heap if the practices or design patterns
+are applied in a wrong way or inconsistently.
+
+My goal for this article is to demonstrate how to apply the Model-View- Controller pattern while
+developing a simple JavaScript component. The component is a kind of the HTML ListBox (“select”
+HTML tag) control with an editable list of items: the user should be able to select and remove items
+and add new items into the list. The component will consist of three classes that corresponds to
+the parts of the Model-View-Controller design pattern.
+
+I hope, this article will be a good reading for you, but it would be much better if you consider to
+run the examples and adapt them to you needs. I believe you have everything to create and run
+JavaScript programs: brains, hands, text editor, and an Internet Browser (Google Chrome, for example).
+
+The Model-View-Controller pattern requires some description here. As you may know, the name of the
+pattern is based on the names of its main parts: Model, which stores an application data model;
+View, which renders Model for an appropriate representation; and Controller, which updates Model.
+Wikipedia defines typical components of the Model-View-Controller architecture as follows:
+
+Model - The domain-specific representation of the information on which the application operates.
+The model is another name for the domain layer. Domain logic adds meaning to raw data (e.g.,
+alculating if today is the user’s birthday, or the totals, taxes and shipping charges for shopping
+cart items).
+
+View - Renders the model into a form suitable for interaction, typically a user interface element.
+MVC is often seen in web applications, where the view is the HTML page and the code which gathers
+dynamic data for the page.
+
+Controller - Processes and responds to events, typically user actions, and invokes changes on the
+model and perhaps the view.
