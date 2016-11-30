@@ -1,0 +1,26 @@
+
+在这之前，先回顾一下javascript中关于类型的基本知识：
+
+1.JS中的值包括两种类型：原始类型（primitive）和对象类型（object）。
+
+2.原始类型包括：Undefined,Boolean,Null,Number,和String这五种。
+
+3.Undefined和Null类型都只有一个值，即undefined和null；Boolean类型有两个值：true和false；
+Number类型的值有很多很多，String类型的值理论上有无数。
+
+4.所有的对象都有valueOf()和 toString()方法。他们继承自Object，当然也可能被子类重写。
+
+下面考虑表达式：
+
+    x == y
+
+
+其中，x和y是以上六中类型的任意一种。
+当x和y的类型相同时，x == y 可以转化为 x === y ,而后者是很简单的。所以我们只考虑x和y类型不相同的情况。
+
+关于javascript中的undefined和null，通常被认为是设计上的缺陷。这一点不去深究。但是听说JavaScript的
+作者最初是这样想的：
+
+假如你想把一个变量赋予对象类型的值，但是现在还没有赋值，那么你可以用null表示此时的状态，(证据之一就是typeof null
+的结果是'object')；相反，假如你你想把一个变量赋予原始类型的值，但是现在还没有赋值，那么。你可以用undefined
+来表示此时的状态。

@@ -1,0 +1,91 @@
+
+
+js数组去重一直是面试高频题：下面介绍五种去重方法：
+
+1.遍历数组法：新建一个数组，当新数组中不存在某个元素时，就加进去。使用indexOf（）方法。
+
+// 最简单数组去重法
+function unique1(array){
+  var n = []; //一个新的临时数组
+  //遍历当前数组
+  for(var i = 0; i < array.length; i++){
+    //如果当前数组的第i已经保存进了临时数组，那么跳过，
+    //否则把当前项push到临时数组里面
+    if (n.indexOf(array[i]) == -1) n.push(array[i]);
+  }
+  return n;
+}
+
+
+// 判断浏览器是否支持indexOf ，indexOf 为ecmaScript5新方法 IE8以下（包括IE8， IE8只支持部分ecma5）不支持
+if (!Array.prototype.indexOf){
+  // 新增indexOf方法
+  Array.prototype.indexOf = function(item){
+    var result = -1, a_item = null;
+    if (this.length == 0){
+      return result;
+    }
+    for(var i = 0, len = this.length; i < len; i++){
+      a_item = this[i];
+      if (a_item === item){
+        result = i;
+        break;
+      }
+    }
+    return result;
+  }
+}
+
+2.对象键值对法：
+
+该执行方法比其他任何方法都快，就只占用内存大些，
+实现思路：新建一js对象以及新数组，遍历传入数组时，判断值是否为js对象的键，不是的话给对象新增该键并放入新数组。
+
+// 速度最快， 占空间最多（空间换时间）
+function unique2(array){
+  var n = {}, r = [], len = array.length, val, type;
+    for (var i = 0; i < array.length; i++) {
+        val = array[i];
+        type = typeof val;
+        if (!n[val]) {
+            n[val] = [type];
+            r.push(val);
+        } else if (n[val].indexOf(type) < 0) {
+            n[val].push(type);
+            r.push(val);
+        }
+    }
+    return r;
+}
+
+3.数组下标判断法：
+
+性能和方法一差不多：
+
+实现思路：如果当前数组的第i项在当前数组中第一次出现的位置不是i，那么表示第i项是重复的，忽略掉。否则存入结果数组。
+
+function unique3(array){
+  var n = [array[0]]; //结果数组
+  //从第二项开始遍历
+  for(var i = 1; i < array.length; i++) {
+    //如果当前数组的第i项在当前数组中第一次出现的位置不是i，
+    //那么表示第i项是重复的，忽略掉。否则存入结果数组
+    if (array.indexOf(array[i]) == i) n.push(array[i]);
+  }
+  return n;
+}
+
+4.优化遍历数组法：
+
+function unique5(array){
+        var r = [];
+        for(var i = 0, l = array.length; i < l; i++) {
+            for(var j = i + 1; j < l; j++)
+                if (array[i] === array[j]) j = ++i;
+            r.push(array[i]);
+        }
+        return r;
+    }
+
+这种方法没有用到indexOf()方法，性能上面有所提升。和方法二不相上下。
+

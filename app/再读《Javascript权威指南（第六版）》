@@ -1,0 +1,160 @@
+
+学而时习之，温故而知新，不亦乐乎？
+
+this time I will read it with the help of https://developer.mozilla.org/en_US.
+chapter　One :
+
+1.javascript ofen shortened to JS ,is a lightweight,interpreted,objected-oriented langulage with
+first-class functions,and it's best known as the script language for web pages,but it is used in
+many non-browser environments as well. it is prototyped-based,multi-paradigm scripting language
+that is dynamic, and supports object-oriented, imperative, and functional programming styles.
+
+In a nutshell,javascript is a dynamic scripting language supporting prototype based objected
+construction.the basic syntax is similar to both java ang C++ to reduce new concepts  required
+ to learn the language.
+
+
+ chapter Two :
+
+ basics:
+
+ 1.javascript 的很多语法借鉴于java，但也受到Awk，Perl和Python的影响。
+
+ 2.变量申明：
+
+ javascript有三种申明：
+
+ var 申明一个变量，可选择将其初始化为一个值。
+
+ let 声明块范围局部变量(block scope local variable)，可选择将其初始化为一个值。
+
+ const 声明一个只读(read-only)的有名字的常量。
+
+ 变量的域（Variable Scope）
+
+ECMAScript 6 之前的JavaScript没有 语句块 作用域；相反，语句块中声明的变量将成为语句块所在代码段的局部变量。
+例如，如下的代码将在控制台输出 5，因为 x 的作用域是声明了 x 的那个函数（或全局范围），而不是 if 语句块。
+
+if (true) {
+  var x = 5;
+}
+console.log(x); // 5
+
+结合上面的结果，我认为：javascript的变量作用域本质上是函数级作用域（或者全局作用域）。若变量不在函数内申明，
+则为全局变量，否则为局部变量，当然除非用 let 关键字申明。
+
+if (true) {
+  let y = 5;
+}
+console.log(y); // ReferenceError: y is not defined
+
+以上运行时，输出y就会报错，所以：
+
+    使用let 来申明【语句代码块片段】的局部变量（block scope local variable）
+
+变量申明提升（variable hoisting）
+
+javascript变量的另一特别之处就在于：你可以应用稍后申明的变量，而不会引发异常。这一概念被称为变量申明提升（hoisting）。
+
+JavaScript 变量感觉上是被“提升”或移到了所有函数和语句之前。然而提升后的变量将返回 undefined 值，所以即使在使用或引
+用某个变量之后存在声明和初始化操作，这个被提升的引用仍将得到 undefined 值。
+
+
+
+/**
+ * Example 1
+ */
+console.log(x === undefined); // logs "true"
+var x = 3;
+
+
+/**
+ * Example 2
+ */
+// will return a value of undefined
+var myvar = "my value";
+
+(function() {
+  console.log(myvar); // undefined
+  var myvar = "local value";
+})();
+
+由于存在变量声明提升，一个函数中所有的var语句应尽可能地放在接近函数顶部的地方。这大大地提升了程序代码的清晰度。
+
+在 ECMAScript 2015 中，let（const）将不会提升变量到代码块的顶部。因此，在变量声明之前引用这个变量，将抛
+出错误ReferenceError。这个变量将从代码块一开始就处在一个“暂时性死区”，直到这个变量被声明为止。
+
+
+console.log(x); // ReferenceError
+let x = 3;
+
+## 函数提升(很重要！)
+
+对于函数，只有函数申明会被提升到顶部，不包括函数表达式。
+
+function declaration1
+
+foo();  // 'bar'
+
+function foo(){
+    console.log('bar');
+}
+
+function declaration2
+
+baz(); //TypeError:baz is not a function.
+
+var baz = function(){
+    console.log('bar');
+}
+
+常量（constants）
+
+    可以用关键字 const 创建一个只读read-only的常量。常量不可以通过赋值改变其值，也不可以在脚本运行时
+    重新申明。它必须初始化为某个值。
+    常量的作用域规则与let级块级作用域变量相同。
+
+
+    // THIS WILL CAUSE AN ERROR
+    function f() {};
+    const f = 5;
+
+    // THIS WILL CAUSE AN ERROR ALSO
+    function f() {
+      const g = 5;
+      var g;
+
+      //statements
+    }
+
+
+    然而,对象属性是不受保护的,所以下面的语句执行没有问题。
+
+    const obj = {'key':'value'};
+
+    obj.key = 'jessy';
+    执行上面这段代码没问题。
+
+
+
+数据结构和类型;
+
+数据类型：
+
+六种原型：
+Boolean，值为true或者false；
+null，一个表明null值的特殊关键字。javascript是大小写敏感的，因此，null与Null，NULL或者其他的变量完全不同。
+undefined，变量未定义时的属性。
+Number，
+String,
+Symbol，（在es6）中新增的类型，一种数据类型。它的实例是唯一且不可改变的。
+
+还要Object对象
+
+Objects和functions是本语言的其他两个基本要素。你可以将对象视为存放值的命名容器，而将函数视为你的应用程序
+能够执行的过程（procedures）。
+
+字面值：
+
+
+

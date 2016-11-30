@@ -1,0 +1,130 @@
+
+注意： 只有函数类型才有apply,call,bind方法，在这之前，先弄明白__proto和prototyped的区别和联系。
+
+详情见：https://www.zhihu.com/question/34183746
+
+
+the call() function calls a function with a given this value and arguments provided individually.
+首先要明确以下几点：
+
+1.在js中，万物皆对象，方法Function也不例外。方法的原型（Function.prototype）也是对象。因此他们具有对象
+共有的特点。
+即对象具有属性__proto__，可称为隐式原型，一个对象的隐式原型，指向构造该对象的构造函数的原型，这也保证了实
+例能够访问在构造函数原型中定义的属性和方法。
+
+
+
+2.Function这个特殊的对象，除了和其他对象一样拥有上述__proto__属性之外，还有自己特有的属性-原型属性prototype。
+这个属性是一个指针，指向一个对象，这个对象的用途就是包含所有实例共享的属性和方法（我们把这个对象叫做原型对象）。
+原型对象也有一个属性，叫做constructor，这个属性包含了一个指针，指回原构造函数。
+
+
+总结：
+1.对象有属性__proto__,指向该对象的构造函数的原型对象。
+2.方法除了有属性__proto__,还有属性prototype，prototype指向该方法的原型对象。
+
+
+Note: While the syntax of this function is almost identical to that of apply(), the fundamental
+difference is that call() accepts an argument list, while apply() accepts a single array of arguments.
+
+
+Syntax；
+
+fun.call(thisArg[,arg1[,arg2[,......]]]);
+
+Parameters
+
+ThisArg:
+    the value of this provided for the call to fun.
+
+注意;这个指定的this值并不一定是该函数执行时真正的this值，因为如果this值为null，或者为undefined时，
+（并且这个函数处于非严格模式下），则this值为自动指向全局对象（浏览器中就是window对象）；如果this值为
+原始值（例如：数字，字符串，布尔值，），则this会自动指向该原始值的自动包装对象。
+
+arg1,arg2
+
+    指定的参数列表。
+
+返回值：
+
+    返回结果包括指定的this值和参数。
+
+描述
+
+可以让call()对象调用当前对象调用当前对象所拥有的function。你可以使用call：
+    1.实现继承：写一个方法，然后让另一个新的对象来继承它，而不是在新的对象中在写一次这个方法。
+
+ for example:
+
+ 使用call方法来为一个对象调用父构造函数。（Using call to chain constructors for an object）
+
+ 在一个子构造函数中，你可以通过调用父构造函数的call方法来实现继承，类似于java中的写法。
+ 下例中，使用Food和Toy构造函数创建的对象实例都会拥有在Product构造函数中添加的name属性和price属性，
+ 但category属性是各自的构造函数中定义的。
+
+ function Product(name,price){
+
+        this.name = name;
+        this.price = price;
+        if(price <0){
+
+            throw RangeError('Cannot create product '+ this.name + ' with a negative price');
+        }
+ }
+
+注明：the RangeError 表明一个错误，当一个值不在其所允许的范围或者集合中。
+
+语法Syntax:
+ new RangeError([message[, fileName[, lineNumber]]])
+
+ 参数;
+
+ message
+ 可选,可读的错误描述。
+ fileName
+ 可选，包含造成异常代码的文件名。
+ lineNumber
+ 可选，造成异常的代码所在的行数。
+
+描述
+    试图传递一个number参数给一个范围内不包含该number的函数时则会引发RangeError。当传递一个不合法的length值
+    作为Array 构造器的参数创建数组，或者传递错误值到数值计算方法（Number.toExponential()，Number.toFixed()
+    ，Number.toPrecision()），会出现RangeError。.
+
+属性Properties
+
+RangeError.prototype
+允许在RangeError对象上附加属性。
+
+方法Methods
+
+全局的RangeError对象没有自带方法，但它通过可以prototype 链继承一些方法。
+RangeError.prototype.constructor
+Specifies the function that created an instance's prototype.
+
+RangeError.prototype.message
+Error message. Although ECMA-262 specifies that RangeError should provide its own message property,
+in SpiderMonkey, it inherits Error.prototype.message.
+
+RangeError.prototype.name
+Error name. Inherited from Error.
+RangeError.prototype.fileName
+Path to file that raised this error. Inherited from Error.
+RangeError.prototype.lineNumber
+Line number in file that raised this error. Inherited from Error.
+RangeError.prototype.columnNumber
+Column number in line that raised this error. Inherited from Error.
+RangeError.prototype.stack
+Stack trace. Inherited from Error.
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,14 @@
+
+javascript语言可以识别7中不同类型的值；
+
+六中原始数据类型：
+
+    Boolean；布尔值，true 和 false.
+    null：一个表明 null 值的特殊关键字。 JavaScript 是大小写敏感的，因此 null 与 Null、NULL或其他变量完全不同。
+    undefined：  变量未定义时的属性
+    Number：
+    String：
+    Symbol：( 在 ECMAScript 6 中新添加的类型).。一种数据类型，它的实例是唯一且不可改变的。
+以及 Object对象
+
+

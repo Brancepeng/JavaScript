@@ -1,0 +1,353 @@
+
+
+1.简介;
+
+ECMAScript 5.1是ECMAScript(基于JavaScript的规范)标准最新修正。
+与HTML5规范进程本质类似，ES5通过对现有JavaScript方法添加语句和原生ECMAScript对象做合并实现标准化。
+ES5还引入了一个语法的严格变种，被称为”严格模式(strict mode)”。
+
+ES5的严格模式下运行脚本，不少导致提醒或buggy行为的事情会抛出错误，例如：
+
+    A.未声明的变量赋值抛出一个ReferenceError, 而不是创建一个全局变量；
+    B.不止一次对对象字面量分配相同的属性会抛出SyntaxError；
+    C.使用with语句抛出SyntaxError.
+
+JSON
+
+ES5提供一个全局的JSON对象，用来序列化（JSON.stringify）和反序列化（(JSON.parse）对象为JSON格式。
+
+
+JSON.parse(text[,reviver])
+
+JSON接受文本（JSON格式）并且转换成一个ECMAScript值。该可选的reviver参数是带有key和value两个参数的函数，
+
+其作用于结果-让过滤和转换返回值成为可能。
+
+>> var result = JSON.parse('{"a": 1, "b": "2"}');
+Object
+
+>> result.b
+"2"
+
+
+如果我们想确保解析的值是个整数，我们可以使用reviver方法。
+
+var result = JSON.parse('{"a": 1, "b": "2"}', function(key, value){
+  if (typeof value == 'string'){
+    return parseInt(value);
+  } else {
+    return value;
+  }
+})
+
+>> result.b
+2
+
+
+JSON.stringify(value [, replacer [, space]])
+
+JSON.stringify允许作者接受一个ECMAScript值然后转换成JSON格式的字符串。
+在其最简单的形式中，JSON.stringify接受一个值返回一个字符串，
+>>> var mike = JSON.stringify({mike: "taylor"})
+undefined
+
+>> mike
+'{"mike": "taylor"}'
+
+>> typeof mike
+"string"
+
+如果我们需要改变值字符串化的方式，或是对我们选择的提供过滤，我们可以将其传给replacer函数。
+例如，我们想过滤出即将被字符串化的对象中值为13的属性：
+
+var nums = {
+  "first": 7,
+  "second": 14,
+  "third": 13
+}
+
+var luckyNums = JSON.stringify(nums, function(key, value){
+  if (value == 13) {
+    return undefined;
+  } else {
+    return value;
+  }
+});
+
+>> luckyNums
+'{"first": 7, "second": 14}'
+
+如果replacer方法返回undefined, 则键值对就不会包含在最终的JSON中。
+
+附加对象：
+下面的方法开始添加到Object上的构造器：
+
+Object.getPrototypeOf:
+
+Object.getOwnPropertyDescriptor:
+
+Object.getOwnPropertyNames:
+
+Object.create:
+
+Object.defineProperty:
+
+Object.defineProperties:
+
+Object.keys:
+
+Object.seal
+Object.freeze
+Object.preventExtensions
+Object.isSealed
+Object.isFrozen
+Object.isExtensible
+
+....
+
+这些新增的构造器的好处是对对象的属性有了更多的控制。例如那些属性是允许被修改的，那些事可以枚举的，那些事可以删除的。
+
+这个的实现通过访问对象的属性操作符：例如;
+
+var cat = {};
+
+Object.defineProperty(cat,"name",{
+
+    value:'Mary',
+    writable:false,
+    enumerable:true,
+    configurable:false
+
+
+});
+
+Object.defineProperty(cat, "skill", {
+  value: "exploring boxes",
+  writable: true,
+  enumerable: true,
+  configurable: true
+});
+
+
+对于我们的cat对象, 其名字name不能被改变，但是会出现在for-in循环中。在其他方面，Maru擅长探索盒子(exploring
+boxes), 但是可以在将来改变，因为skill属性是writable和configurable的。
+
+
+额外的数组;
+
+Array.prototype.indexOf;
+
+Array.prototype.lastIndexOf;
+
+Array.prototype.every;
+
+Array.prototype.some;
+
+Array.prototype.forEach;
+
+Array.prototype.map;
+
+Array.prototype.filter;
+
+Array.prototype.reduce;
+
+Array.prototype.reduceRight;
+
+还有一个就是Array.Array();Array.isArray会按照你所期待的那样去做 — 这是一个根据参数的[[Class]]内
+部属性是否是”Array”返回true或false.
+
+Array.isArray("NO U")
+>> false
+
+Array.isArray(["NO", "U"])
+>> true
+
+Function.prototype.bind(thisArg[,arg1[,arg2...]]);
+
+Function.prototype.bind返回一个新的函数对象，该函数对象的this绑定到了thisArg参数上，从本质上讲，这允许你在其他
+对象链中执行一个函数：
+
+
+function locate (){
+    console.log(this.location);
+
+    }
+
+
+function Maru (location){
+
+        this.location = location;
+    }
+
+var kitty = new Maru('cat');
+
+var locateMaru = locate.bind(kitty);
+
+locateMaru();
+
+上面很笼统的讲了一些es5中的新东西，下面具体详细的深入介绍一下：
+
+
+首先，关于数组Array：
+
+forEach:Array新增方法中最基本的一个，就是遍历循环。
+
+[1,2,3,4].forEach(function(element，index){
+
+    console.log(element，index);
+});
+
+Array在es5新增的方法中，参数都是function类型，这个函数默认有传入参数，这些参数分别是：
+
+[].forEach(function(value, index, array) {
+    // ...
+});
+
+如上，第一个是当前的数组元素的值，第二个对应的数组索引，第三个是数组本身。
+
+对比jQuery中的$.each()方法，
+$.each([], function(index, value, array) {
+    // ...
+});
+
+注意：第一个和第二个参数正好是相反的。
+
+后面类似的方法，例如$.map()也是如此。
+
+再进一步，forEach除了接受一个必须的回调函数参数，还可以接受一个可选的上下文参数（改变回调函数里面的this指向）（第二个参数）。
+
+如下:
+[].forEach(callback[, thisObject]);
+
+
+下面举个例子：
+
+var database = {
+    users:["彭于晏", "江一燕", "李小璐"],
+    sendEmail:function(user){
+        if(this.isValidUser){         //
+            console.log("你好，"+user);
+        }else{
+            console.log("抱歉，"+ user +"，你不是本家人");
+        }
+    },
+    isValidUser:function(user){
+        return /^彭/.test(user);
+    }
+};
+
+然后给每个人发邮件:
+
+database.users.forEach(  //database.users中人遍历。
+    database.sendEmail,  //发送邮件
+    database             // 使用database代替上面的database中sendEmail函数中的this.
+);
+
+如果这第二个参数不指定，则使用全局对象代替（在浏览器中则为window），严格模式下甚至是undefined.
+
+另外，forEach不会遍历纯粹“占着官位吃空饷”的元素的，例如下面这个例子：
+
+var array = [1, 2, 3];
+
+delete array[1]; // 移除 2
+alert(array); // "1,,3"
+
+alert(array.length); // but the length is still 3
+
+array.forEach(alert); // 弹出的仅仅是1和3
+
+
+对于古董浏览器：如在ie6-ie8
+
+if (typeof Array.prototype.forEach != "function") {  //判断浏览器中是否支持原生es5数组特性
+  Array.prototype.forEach = function (fn, context) {  //如果不支持原生es5数组特性，则进行拓展
+    for (var k = 0, length = this.length; k < length; k++) { //遍历数组；
+      if (typeof fn === "function" && Object.prototype.hasOwnProperty.call(this, k)) {
+        fn.call(context, this[k], k, this);
+      }
+    }
+  };
+}
+
+附注:下面讲讲关于Object.prototype.hasProperty();
+
+概述：hasOwnProperty() 方法用来判断某个对象是否含有指定的自身属性，而不是继承而来的。
+
+语法：obj.hasProperty(prop)
+
+参数：prop  要检测的属性名称
+
+描述：所有继承了 Object.prototype 的对象都会从原型链上继承到 hasOwnProperty 方法，这个方法可以用来检测一个对象
+是否含有特定的自身属性，和 in 运算符不同，该方法会忽略掉那些从原型链上继承到的属性。
+
+
+1.使用hasOwnProperty 方法判断某对象是否含有特定的自身属性；
+
+下面的例子检测了对象 o 是否含有自身属性 prop：
+
+o = new Object();
+o.prop = 'exists';
+
+function changeO() {
+  o.newprop = o.prop;
+  delete o.prop;
+}
+
+o.hasOwnProperty('prop');   // 返回 true
+changeO();
+o.hasOwnProperty('prop');   // 返回 false
+
+
+2.自身属性和继承属性的区别
+
+o = new Object();
+o.prop = 'exists';
+o.hasOwnProperty('prop');             // 返回 true
+o.hasOwnProperty('toString');         // 返回 false
+o.hasOwnProperty('hasOwnProperty');   // 返回 false
+
+
+3.遍历一个对象的所有自身属性
+
+function Person (name){
+    this.name = name;
+}
+
+Person.prototype.getName = function (name){
+    return this.name = name;
+}
+
+var p = new Person('Jessy');
+for(var prop in p){
+
+    console.log(prop);
+
+    if(p.hasOwnProperty(prop)){
+        console.log('own property contains '+prop );
+    }
+    else {
+        console.log('inherit prop contains '+prop);
+    }
+}
+
+4.hasOwnProperty 方法有可能被遮蔽
+
+var foo = {
+    hasOwnProperty: function() {
+        return false;
+    },
+    bar: 'Here be dragons'
+};
+
+foo.hasOwnProperty('bar'); //始终返回false;
+
+// 如果担心这种情况，可以直接使用原型链上真正的 hasOwnProperty 方法
+
+({}).hasOwnProperty.call(foo,bar);//true  //注意:小括号是必须要的。
+
+//或者
+
+Object.prototype.hasOwnProperty.call(foo, 'bar'); // true
+
+
+

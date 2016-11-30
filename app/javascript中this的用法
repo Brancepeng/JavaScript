@@ -1,0 +1,176 @@
+
+
+this是javascript中的一个关键字。
+
+它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用。比如：
+
+function test(){
+
+    this.x = 1;
+}
+为了证明this就是全局对象，我对代码做一些改变：
+　var x = 1;
+　　function test(){
+        console.log(this === window);
+　　　　alert(this.x);
+　　}
+　　test(); // 1
+在改变一下：
+　var x = 1;
+　　function test(){
+　　　　this.x = 0;
+　　}
+　　test();
+　　alert(x); //0  //说明this.x改变是全局变量下x的值。
+
+随着函数场景的使用不同，this的值会发生变化。但是有一个总的原则，那就是this指的是，调用函数的那个对象。
+
+下面分四种情况，信息讨论this的用法。
+
+情况一：纯粹的函数调用，在上面已经详细说明了。
+
+
+
+情况二：
+
+
+下面是关于http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/
+这篇文章的翻译。
+
+这些年来，我经历了许多关于javascript函数调用的困惑。特别是，在javascript中this语法在函数调用过程中的状态改变
+非常困惑。
+
+
+在我看来，只要理解了原始类型值对this的使用，基本上就不会对this句法在函数调用过程中的困惑。
+
+首先，然我们来看看原始类型值对函数的调用方法，call()方法。这个方法相对来说最直接的调用this的方法。
+
+首先回顾一下call()方法的使用。详见：本目录下面中"javascript中call方法，apply方法，bind方法"
+这里不做详细描述。
+
+1.做一个参数列表，从参数1到最后（即最少有一个参数）。
+
+2.第一个参数的值就是thisValue。
+
+3.调用这个函数时，将thisValue值赋给函数内部的this,并且这个参数列表作为被调函数的参数列表。
+
+如下：
+
+function hello(thing) {
+  console.log(this + " says hello " + thing);
+}
+
+hello.call("Yehuda", "world") //=> Yehuda says hello world
+
+在上面的例子中，我们调用可hello函数时，将this赋值为"Yehuda",并且传入了一个参数"world",
+这就是javascript中原始值（primitive）的函数调用。
+
+下面在讲讲简单函数调用：
+
+很明显，一直使用call方法去调用函数是非常麻烦的。因为我们可以直接调用函数使用类似语法:
+    hello('world');
+当我们这样做时，类似语法糖为：
+
+function hello(thing) {
+  console.log("Hello " + thing);
+}
+
+// this:
+hello("world")
+
+// desugars to:
+hello.call(window, "world");
+
+
+这种方式在es5严格模式下已经改变：
+
+// this:
+hello("world")
+
+// desugars to:
+hello.call(undefined, "world"); //在es5严格模式下window值改为undefined.
+
+缩略版本类似:
+一个函数调用类似fn(...args)等同于fn.call(window[或者undefined],...args);//在es5-strict下为undefined。
+
+注意：下面这种函数申明也是正确的：
+
+(function (){}),
+
+它等同于(function() {}).call(window[或者undefined]);
+
+注：实际上，当call方法的第一个参数为undefined时，它总是能传递成功，只不过，
+在非严格模式下，被调函数的this值会被设置为全局对象（在浏览器中为window）。
+
+Member Functions(成员函数)
+
+另一个常用到this的方式就是调用一个方法作为对象的一个成员（类似person.hello()）。例子如下：
+
+var person = {
+  name: "Brendan Eich",
+  hello: function(thing) {
+    console.log(this === person);
+    console.log(this + " says hello " + thing);
+  }
+}
+
+// this:
+person.hello("world")
+
+// desugars to this:
+person.hello.call(person, "world");
+
+注意：不在乎hello这个函数是如何成为person的成员的（即无论是直接由字面量的形式申明还是hello作为一个独立的函数
+在之后被hello调用）。详情看下面的例子：
+
+function hello(thing) {
+  console.log(this + " says hello " + thing);
+}
+
+person = { name: "Brendan Eich" }
+person.hello = hello;
+
+person.hello("world") // still desugars to person.hello.call(person, "world")
+
+hello("world") // "[object DOMWindow]world"  //这里等同于hello.call(undefined,'world');
+
+根据上面注意到：函数中的this并不具有一个永久固定值，而总是随着调用它的调用者而改变。
+
+Using Function.prototype.bind
+
+Function.prototype.bind 对于this值引用为固定值时非常方便。我们通常用一个非常简单的闭包技巧
+来使一个函数的this值保持稳定不变。
+var person = {
+  name: "Brendan Eich",
+  hello: function(thing) {
+    console.log(this.name + " says hello " + thing);
+  }
+}
+
+var boundHello = function(thing) { return person.hello.call(person, thing); }
+
+boundHello("world");
+
+尽管函数boundHello调用，看起来等同于boundHello.call(window,'world')，但是我们可以反过来
+使用call的原始调用方式来把这个this值改成我们所需要的。
+我们可以通过一些调整来做到这点：
+
+var bind = function (func,thisValue){
+    return function(){
+        return func.apply(thisValue,arguments);
+    }
+}
+
+var boundHello = bind(person.hello,person);
+boundHello('world');
+
+
+
+
+
+
+
+
+
+
+

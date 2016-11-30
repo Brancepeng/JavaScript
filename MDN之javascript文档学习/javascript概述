@@ -1,0 +1,85 @@
+
+MDN上javascript文档有哪些内容？
+
+1.认识Web ：为初学者提供信息，并介绍一些关于编程和互联网的基本概念。
+2.JavaScript入门  (本指导)： 提供 JavaScript 这门语言及其目标的概述。
+3.JavaScript 参考： 提供关于 JavaScript 的详细参考资料。
+
+1.什么是javascript？
+
+JavaScript 是一门跨平台、面向对象的轻量级脚本语言。 在宿主环境（例如 web 浏览器）中， JavaScript 能够通过连接环境对象
+来提供可控制编程。
+
+javascript本身内置了一个包含一系列的对象的标准库，比如，数组Array，日期Date，数学Math和一组核心的语言元素，包括运算符，
+流程控制符，以及语句等，javascript核心部分可以通过补充额外的对象来拓展语言以适用不同用途：
+
+    客户端的javascript通过提供控制浏览器及其文档对象模型（DOM）的对象，来拓展语言核心。例如：客户端版本直接支持应用
+    将元素放在html表单中，并且支持用户事件，比如，鼠标点击，表单提交和页面导航。
+
+    服务端的javascript则通过提供有关在服务器上运行javascript的对象的对象来拓展语言核心。例如：服务端版本直接应用和数据
+    库通信，提供应用不同调用之间的连续性，或者在服务器上执行文件操作，或者在服务器上执行文件操作。
+
+
+2.javascript和ECMAScript规范的关系
+
+JavaScript 的标准化组织是 ECMA ——这个欧洲信息与通信系统标准化协会提供基于 Javascript 的标准化方案（ECMA 原先是欧洲计算
+机制造商协会的首字母缩写）。
+
+ECMAScript 文档并不是旨在帮助脚本程序员；编写脚本时请参考  JavaScript 文档。
+
+
+    
+下面介绍javascript的基本语法,变量申明，数据类型，和字面量（literals）。
+
+基础：
+
+javascript很多语法借鉴自java，但也受到了awk，perl，python的影响。
+
+JavaScript 区分大小写，使用 Unicode 字符集。
+
+在javascript中，指令叫做语句。并用分号分隔。
+
+声明：
+
+var 声明一个变量，可选择将其初始化为一个值。
+
+let 声明一个块作用域的局部变量(block scope local variable)，可选择将其初始化为一个值。
+
+const 声明一个只读的变量。
+
+用 var  声明的且未赋初值的变量，值会被设定为 undefined。
+试图访问一个未声明的变量或者访问一个使用 let 声明的但未初始化的变量会导致一个 ReferenceError 异常被抛出。
+
+在布尔值中，undefined，null均被视为false。
+
+重点：变量的作用域：
+
+在所有函数之外声明的变量，叫做全局变量。因为它可以被当前文档中的所有代码访问。在函数内部声明的变量，叫做局部变量。因为
+它只能在函数内访问（闭包除外）。
+
+ECMAScript 6 之前的JavaScript没有 语句块 作用域；相反，语句块中声明的变量将成为语句块所在代码段的局部变量。
+例如，如下的代码将在控制台输出 5，因为 x 的作用域是声明了 x 的那个函数（或全局范围），而不是 if 语句块。
+
+if (true) {
+  var x = 5;
+}
+console.log(x); // 5
+
+如果使用 ECMAScript 6 中的 let 声明，上述行为将发生变化。
+
+if (true) {
+  let y = 5;
+}
+console.log(y); // ReferenceError: y is not defined
+
+
+
+
+
+
+
+
+
+
+
+

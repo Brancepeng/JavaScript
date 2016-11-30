@@ -1,0 +1,165 @@
+
+
+关于javascript中的立即执行函数，通常有下面两种写法：
+
+(function(){...})();
+
+(function(){...}());
+在Javascript中，一对圆括号“()”是一种运算符，跟在函数名之后，表示调用该函数。比如，print()就表示调用print函数。
+
+要理解立即执行函数：需要先理解函数的一些基本概念；函数申明、函数表达式，因为我们定义一个函数通常都是通过这两种方式。
+
+函数声明 (function 语句)
+
+function name([param[, param[, ... param]]]) {
+   statements
+}
+name：函数名；
+param：被传入函数的参数的名称,一个函数最多可以有255个参数；
+statements：这些语句组成了函数的函数体。
+
+
+函数表达式 (function expression)
+
+函数表达式和函数声明非常类似,它们甚至有相同的语法。
+
+function [name]([param] [, param] [..., param]) {
+   statements
+}
+name：函数名,可以省略,省略函数名的话,该函数就成为了匿名函数；
+param：被传入函数的参数的名称,一个函数最多可以有255个参数；
+statements：这些语句组成了函数的函数体。
+
+下面我们给出一些栗子说明：
+
+// 声明函数f1
+function f1() {
+    console.log("f1");
+}
+// 通过()来调用此函数
+f1();
+
+
+//一个匿名函数的函数表达式，被赋值给变量f2:
+var f2 = function() {
+    console.log("f2");
+}
+//通过()来调用此函数
+f2();
+
+
+//一个命名为f3的函数的函数表达式(这里的函数名可以随意命名，可以不必和变量f3重名)，被赋值给变量f3:
+var f3 = function f3() {
+    console.log("f2");
+}
+//通过()来调用此函数
+f3();
+
+
+当表达式这样写的时候，如下：
+function (){ ... }()；
+
+//或者
+
+function fName(){ ... }();
+
+浏览器就会报错：.....SyntaxError: Unexpected token (......
+
+产生这个错误的原因就是：javascript引擎看到function关键字后，认为后面跟的是函数定义语句，不应该以圆括号结尾。
+
+解决方法就是，让引擎知道，圆括号前面的部分不是函数定义语句，而是一个表达式，可以对此进行运算，因此，可以这样写：
+
+(function(){...}());
+
+or
+
+(function(){...})();
+
+这两种写法都是以圆括号开头，引擎后面跟的是一个表达式，而不是一个函数定义，所以就避免了错误。这就叫做"立即调用的
+函数表达式（Immediately-invoked Function Expression）".
+
+注意：上面两种写法都必须加上分号；
+
+推而广之，任何让解释器以表达式来处理函数定义的方法，都能产生同样的效果，比如下面三种写法。
+
+var i = function(){return 10;}();  //i = 10;
+
+true && function(){ /* code */ }();
+
+0, function(){ /* code */ }();
+
+甚至像这样写：
+
+!function(){ /* code */ }();
+
+~function(){ /* code */ }();
+
+-function(){ /* code */ }();
+
++function(){ /* code */ }();
+
+
+new关键字也能达到这个结果：
+
+new function(){ /* code */ }
+
+new function(){ /* code */ }() // 只有传递参数时，才需要最后那个圆括号。
+
+
+那么，在什么情况下为使用IIFE呢？
+
+通常情况下，只对匿名函数使用这种立即执行函数表达式。
+
+它的目的有两个：
+
+一是不必为函数命名，避免了污染全局变量；
+二是IIFE内部形成了一个单独的作用域，可以封装一些外部无法读取的私有变量。
+
+// 写法一
+var tmp = newData;
+processData(tmp);
+storeData(tmp);
+
+// 写法二
+(function (){
+  var tmp = newData;
+  processData(tmp);
+  storeData(tmp);
+}());
+
+上面代码中，写法二比写法一更好，因为完全避免了污染全局变量。
+
+最后在举一个真实的栗子：在JavaScript的OOP中，我们可以通过IIFE来实现一个单例(关于单例的优化不再此处讨论):
+
+//创建一个立即调用的匿名函数表达式
+//return 一个变量，其中这个变量包含你要暴露的东西。
+
+//返回的这个变量将值赋给counter，此时，counter是一个普通值，而不是一个函数。（具体见下面）
+
+
+var counter = (function () {
+    var i = 0;
+
+    return {
+        get: function () {
+            return i;
+        },
+        set: function (val) {
+            i = val;
+        },
+        increment: function () {
+            return ++i;
+        }
+    };
+} ());
+
+// counter是一个带有多个属性的对象，上面的代码对于属性的体现其实是方法
+
+counter.get(); // 0
+counter.set(3);   //等价于 （假设foo为该匿名函数）new Promise(set(val)).then(foo());
+counter.increment(); // 4
+counter.increment(); // 5
+
+counter.i; // undefined 因为i不是返回对象的属性
+i; // 引用错误: i 没有定义（因为i只存在于闭包）
+

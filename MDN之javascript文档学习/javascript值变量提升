@@ -1,0 +1,113 @@
+
+重点：变量申明提升（variable hoisting）
+
+JavaScript 变量的另一特别之处是，你可以引用稍后声明的变量而不会引发异常。这一概念称为变量声明提升(hoisting)；
+JavaScript 变量感觉上是被“提升”或移到了所有函数和语句之前。
+然而提升后的变量将返回 undefined 值。
+所以在使用或引用某个变量之后进行声明和初始化操作，这个被提升的引用仍将得到 undefined 值。
+/**
+ * Example 1
+ */
+console.log(x === undefined); // logs "true"
+var x = 3;
+
+
+/**
+ * Example 2
+ */
+// will return a value of undefined
+var myvar = "my value";
+
+(function() {
+  console.log(myvar); // undefined
+  var myvar = "local value";
+})();
+
+上面的例子，也可写作：
+
+/**
+ * Example 1
+ */
+var x;
+console.log(x === undefined); // logs "true"
+x = 3;
+
+/**
+ * Example 2
+ */
+var myvar = "my value";
+
+(function() {
+  var myvar;
+  console.log(myvar); // undefined
+  myvar = "local value";
+})();
+
+由于存在变量声明提升，一个函数中所有的var语句应尽可能地放在接近函数顶部的地方。这将大大提升程序代码的清晰度。
+
+在 ECMAScript 2015 中，let（const）将不会提升变量到代码块的顶部。因此，在变量声明之前引用这个变量，将抛出错
+误ReferenceError。这个变量将从代码块一开始的时候就处在一个“暂时性死区”，直到这个变量被声明为止。
+
+console.log(x); // ReferenceError
+let x = 3;
+
+函数提升：（重点）（Function hoisting）
+
+对于函数，只有函数申明会被提升到顶部，而不包括函数表达式。
+
+/* 函数声明 */
+
+foo(); // "bar"
+
+function foo() {
+  console.log("bar");
+}
+
+/* 函数表达式   表达式定义的函数，成为匿名函数。匿名函数没有函数提升。*/
+
+baz(); // TypeError: baz is not a function
+//此时的"baz"相当于一个声明的变量，类型为undefined。
+由于baz只是相当于一个变量，因此浏览器认为"baz()"不是一个函数。
+var baz = function() {
+  console.log("bar2");
+};
+
+全局变量：
+
+全局变量实际上是全局对象的属性。在网页中，全局对象为window。
+
+常量：
+
+使用const定义。
+const prefix = '212';
+
+常量不可以通过赋值改变其值，也不可以在脚本运行时重新声明。它必须被初始化为某个值。
+
+常量的作用域规则与 let 块级作用域变量相同。若省略const关键字，则该标识符将被视为变量。
+
+然而,对象属性是不受保护的,所以可以使用如下语句来执行。
+
+在同一作用域中，不能使用与变量名或函数名相同的名字来命名常量。例如：
+// THIS WILL CAUSE AN ERROR
+function f() {};
+const f = 5;
+
+// THIS WILL CAUSE AN ERROR ALSO
+function f() {
+  const g = 5;
+  var g;
+
+  //statements
+}
+
+然而,对象属性是不受保护的,所以可以使用如下语句来执行。
+
+const MY_OBJECT = {"key": "value"};
+MY_OBJECT.key = "otherValue";
+
+
+
+
+
+
+
