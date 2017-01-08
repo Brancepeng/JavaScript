@@ -1,2 +1,15 @@
 
+1.es6简介
+ES6是JavaScript语言版本的下一代标准，于2015年6月正式发布，他的目标是是的JavaScript语言可1以用来编写大型的
+复杂应用程序，成为企业级开发语言。
 
+2.ECMAScript和JavaScript的关系
+ECMAScript和JavaScript的关系是，前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和
+ActionScript）。日常场合，这两个词是可以互换的。
+3.ES6与ECMAScript 2015的关系
+ES6既是一个历史名词，也是一个泛指，含义是5.1版以后的JavaScript的下一代标准，涵盖了ES2015、ES2016、ES2017等等，
+而ES2015则是正式名称，特指该年发布的正式版本的语言标准。
+4.部署进度
+各大浏览器的最新版本，对ES6的支持可以查看kangax.github.io/es5-compat-table/es6/。随着时间的推移，支持度已
+经越来越高了，ES6的大部分特性都实现了。
+Node.js是JavaScript语言的服务器运行环境，对ES6的支持度比浏览器更高。通过Node，可以体验更多ES6的特性。
