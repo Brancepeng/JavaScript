@@ -4,11 +4,121 @@ javascript语言可以识别7中不同类型的值；
 六中原始数据类型：
 
     Boolean；布尔值，true 和 false.
-    null：一个表明 null 值的特殊关键字。 JavaScript 是大小写敏感的，因此 null 与 Null、NULL或其他变量完全不同。
-    undefined：  变量未定义时的属性
+    Null：一个表明 null 值的特殊关键字。 JavaScript 是大小写敏感的，因此 null 与 Null、NULL或其他变量完全不同。
+    Undefined：  变量未定义时的属性
     Number：
     String：
     Symbol：( 在 ECMAScript 6 中新添加的类型).。一种数据类型，它的实例是唯一且不可改变的。
-以及 Object对象
+以及 Object对象.
+
+数据类型之间的强制转换:主要指Number,String,Boolean三个构造函数,手动将各种类型的指转换为数字,字符串,布尔值.
+
+详情见:http://javascript.ruanyifeng.com/grammar/conversion.html.
+
+使用Number()函数,可以将任意类型转为数值.
+分两种情况讨论,一种是参数为原始类型值,一种参数为对象.
+
+原始类型值的转换规则:始类型的值主要是字符串、布尔值、undefined和null，它们都能被Number转成数值或NaN。
+
+// 数值：转换后还是原来的值
+Number(324) // 324
+
+// 字符串：如果可以被解析为数值，则转换为相应的数值
+Number('324') // 324
+
+// 字符串：如果不可以被解析为数值，返回NaN
+Number('324abc') // NaN
+
+// 空字符串转为0
+Number('') // 0
+
+// 布尔值：true 转成1，false 转成0
+Number(true) // 1
+Number(false) // 0
+
+// undefined：转成 NaN
+Number(undefined) // NaN
+
+// null：转成0
+Number(null) // 0
+
+对象的转换规则:
+简单的规则是，Number方法的参数是对象时，将返回NaN，除非是包含单个数值的数组.
+Number({a: 1}) // NaN
+Number([1, 2, 3]) // NaN
+Number([5]) // 5
+
+这是因为:
+1.调用对象自身的valueOf方法。如果返回原始类型的值，则直接对该值使用Number函数，不再进行后续步骤。
+
+2.如果valueOf方法返回的还是对象，则改为调用对象自身的toString方法。如果toString方法返回原始类型的值，则对该值使用Number函数，不再进行后续步骤。
+
+3.如果toString方法返回的是对象，就报错。
+
+String()构造函数:将任意类型值转为字符串.
+
+原始类型值转为字符串规则:
+数值：转为相应的字符串。
+字符串：转换后还是原来的值。
+布尔值：true转为"true"，false转为"false"。
+undefined：转为"undefined"。
+null：转为"null"。
+
+String(123) // "123"
+String('abc') // "abc"
+String(true) // "true"
+String(undefined) // "undefined"
+String(null) // "null"
+
+对象转为字符串规则:
+String方法的参数如果是对象，返回一个类型字符串；如果是数组，返回该数组的字符串形式。
+
+String({a: 1}) // "[object Object]"
+String([1, 2, 3]) // "1,2,3"
+
+String函数的转换规则与Number一样,只不过调换了valueOf函数和toString函数的执行顺序.
+
+String({a: 1})
+// "[object Object]"
+
+// 等同于
+
+String({a: 1}.toString())
+// "[object Object]"
+
+Boolean()构造函数:将任意类型转为Boolean类型的值.
+
+它的转换规则相对简单：除了以下六个值的转换结果为false，其他的值全部为true。
+
+Boolean(undefined) // false
+Boolean(null) // false
+Boolean(0) // false
+Boolean(NaN) // false
+Boolean('') // false
+
+注意，所有对象（包括空对象）的转换结果都是true，甚至连false对应的布尔对象new Boolean(false)也是true。
+
+Boolean({}) // true
+Boolean([]) // true
+Boolean(new Boolean(false)) // true
+
+下面简单提一下object对象.
+
+在ecmascript中,Object类型具有的任何属性和方法都存在与他的实例中,Object的每个实例都具有下面属性和方法.
+列举几个重要的属性和方法.
+Constructor:保存了创建当前对象的构造函数,
+
+hasOwnProperty(propertyname):用于检查给定的属性是否存在于当前实例对象中(而不是实例的原型中),
+例如,O.hasOwnProperty('name')
+
+isPrototypeOf(object):用于检查传入的对象是否是第一个对象的原型.
+
+
+
+
+
+
+
+
 
 

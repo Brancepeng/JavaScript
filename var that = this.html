@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<button id="element">按钮</button>
+<div class="elements">按钮1</div>
+<div class="elements">按钮2</div>
+<div class="elements">按钮3</div>
+<script src="jquery.js"></script>
+<script type="text/javascript">
+
+  /*var colours = ['red', 'green', 'blue'];
+  document.getElementById('element').addEventListener('click', function() {
+    // this is a reference to the element clicked on
+
+    var that = this;
+
+    colours.forEach(function(e) {
+      // this is undefined
+      // that is a reference to the element clicked on
+			console.log(e.concat('ii'));
+			console.log(that);
+    });
+  });*/
+  $('#element').click(function(){
+    // this is a reference to the element clicked on
+
+    var that = this;
+		//console.log(this);
+    $('.elements').each(function(){
+      //var self = this;
+      // this is a reference to the current element in the loop
+      // that is still a reference to the element clicked on
+			console.log(that);
+    });
+  });
+</script>
+</body>
+</html>
