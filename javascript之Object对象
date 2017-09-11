@@ -1,0 +1,409 @@
+1.对象的生成有三种方法:
+var o1 = {};
+var o2 = new Object();
+var o3 = Object.create(Object.prototype);
+上面三行语句是等价的。
+一般来说，第一种采用大括号的写法比较简洁，第二种采用构造函数的写法清晰地表示了意图，第三种写法一般用在需要对象继承的场合.
+
+1.2键名:所有的键名都是字符串,所以不加引号也可以,
+var o = {
+  p: 'Hello World'
+};
+如果键名是数值，会被自动转为字符串。
+var o ={
+  1: 'a',
+  3.2: 'b',
+  1e2: true,
+  1e-2: true,
+  .234: true,
+  0xFF: true
+};
+但是，如果键名不符合标识名的条件（比如第一个字符为数字，或者含有空格或运算符），也不是数字，则必须加上引号，否则会报错。
+var o = {
+  '1p': "Hello World",
+  'h w': "Hello World",
+  'p+q': "Hello World"
+};
+上面对象的三个键名，都不符合标识名的条件，所以必须加上引号。
+1.3属性:
+对象的每一个“键名”又称为“属性”（property），它的“键值”可以是任何数据类型。如果一个属性的值为函数，
+通常把这个属性称为“方法”，它可以像函数那样调用。
+var o = {
+  p: function (x) {
+    return 2 * x;
+  }
+};
+
+o.p(1)
+
+属性也可以动态创建，不必在对象声明时就指定。
+
+var obj = {};
+obj.foo = 123;
+obj.foo // 123
+上面代码中，直接对obj对象的foo属性赋值，结果就在运行时创建了foo属性。
+
+1.4 对象的引用
+如果不同的变量名指向同一个对象，那么它们都是这个对象的引用，也就是说指向同一个内存地址。
+修改其中一个变量，会影响到其他所有变量.
+var o1 = {};
+var o2 = o1;
+
+o1.a = 1;
+o2.a // 1
+
+o2.b = 2;
+o1.b // 2
+
+上面代码中，o1和o2指向同一个对象，因此为其中任何一个变量添加属性，另一个变量都可以读写该属性。
+
+此时，如果取消某一个变量对于原对象的引用，不会影响到另一个变量。
+
+var o1 = {};
+var o2 = o1;
+
+o1 = 1;
+o2 // {}
+上面代码中，o1和o2指向同一个对象，然后o1的值变为1，这时不会对o2产生影响，o2还是指向原来的那个对象。
+但是，这种引用只局限于对象，对于原始类型的数据则是传值引用，也就是说，都是值的拷贝。
+
+var x = 1;
+var y = x;
+
+x = 2;
+y // 1
+上面的代码中，当x的值发生变化后，y的值并不变，这就表示y和x并不是指向同一个内存地址。
+
+2.查看对象所有属性:
+查看一个对象本身的所有属性，可以使用Object.keys方法。
+
+delete 命令
+delete命令用于删除对象的属性，删除成功后返回true。
+
+var o = {p: 1};
+Object.keys(o) // ["p"]
+
+delete o.p // true
+o.p // undefined
+Object.keys(o) // []
+上面代码中，delete命令删除o对象的p属性。删除后，再读取p属性就会返回undefined，而
+且Object.keys方法的返回值中，o对象也不再包括该属性。
+
+注意，删除一个不存在的属性，delete不报错，而且返回true。
+
+var o = {};
+delete o.p // true
+只有一种情况，delete命令会返回false，那就是该属性存在，且不得删除。
+
+var o = Object.defineProperty({}, 'p', {
+  value: 123,
+  configurable: false
+});
+
+o.p // 123
+delete o.p // false
+
+上面代码之中，o对象的p属性是不能删除的.所以delete命令返回false.
+
+另外，需要注意的是，delete命令只能删除对象本身的属性，无法删除继承的属性。
+
+var o = {};
+delete o.toString // true
+o.toString // function toString() { [native code] }
+上面代码中，toString是对象o继承的属性，虽然delete命令返回true，但该属性并没有被删除，依然存在。
+
+上面命令中，p是var命令声明的变量，delete命令无法删除它，返回false。因为var声明的全局变量都是顶层对
+象的属性，而且默认不得删除。
+
+in 运算符
+
+in运算符用于检查对象是否包含某个属性（注意，检查的是键名，不是键值），如果包含就返回true，否则返回false。
+
+var o = { p: 1 };
+'p' in o // true
+
+in运算符的一个问题是，它不能识别对象继承的属性。
+
+var o = new Object();
+o.hasOwnProperty('toString') // false
+
+'toString' in o // true
+
+上面代码中，toString方法不是对象o自身的属性，而是继承的属性，hasOwnProperty方法可以说明这一点。
+但是，in运算符不能识别，对继承的属性也返回true。
+
+for ... in ... 循环
+
+for...in循环用来遍历一个对象的全部属性。
+
+var o = {a: 1, b: 2, c: 3};
+
+for (var i in o) {
+  console.log(o[i]);
+}
+// 1
+// 2
+// 3
+
+下面是一个使用for...in循环，提取对象属性的例子。
+
+var obj = {
+  x: 1,
+  y: 2
+};
+var props = [];
+var i = 0;
+
+for (props[i++] in obj);
+
+props // ['x', 'y']
+
+for...in循环有两个使用注意点。
+1.它遍历的是对象所有可遍历（enumerable）的属性，会跳过不可遍历的属性
+2.它不仅遍历对象自身的属性，还遍历继承的属性。
+请看下面的例子。
+
+// name 是 Person 本身的属性
+function Person(name) {
+  this.name = name;
+}
+
+// describe是Person.prototype的属性
+Person.prototype.describe = function () {
+  return 'Name: '+this.name;
+};
+
+var person = new Person('Jane');
+
+// for...in循环会遍历实例自身的属性（name），
+// 以及继承的属性（describe）
+for (var key in person) {
+  console.log(key);
+}
+// name
+// describe
+上面代码中，name是对象本身的属性，describe是对象继承的属性，for...in循环的遍历会包括这两者。
+
+如果只想遍历对象本身的属性，可以使用hasOwnProperty方法，在循环内部判断一下是不是自身的属性。
+for (var key in person) {
+  if (person.hasOwnProperty(key)) {
+    console.log(key);
+  }
+}
+// name
+对象person其实还有其他继承的属性，比如toString。
+
+person.toString()
+// "[object Object]"
+这个toString属性不会被for...in循环遍历到，因为它默认设置为“不可遍历”，详见《标准库》一章的Object对象部分。
+一般情况下，都是只想遍历对象自身的属性，所以不推荐使用for...in循环。
+
+下面在补充Object对象的一些细节:
+
+JavaScript原生提供Object对象(注意O是大写),所有其他的对象都继承自这个对象,Object本身也是一个构造函数,
+可以直接通过它来生成新对象。
+var obj = new Object();
+Object作为构造函数使用时，可以接受一个参数。如果该参数是一个对象，则直接返回这个对象；如果是一个原始类型的值，则返回该值对应的包装对象。
+
+var o1 = {a: 1};
+var o2 = new Object(o1);
+o1 === o2 // true
+
+new Object(123) instanceof Number
+// true
+
+注意，通过new Object()的写法生成新对象，与字面量的写法o = {}是等价的。
+
+Object()
+
+Object本身当作工具方法使用时，可以将任意值转为对象。这个方法常用于保证某个值一定是对象。
+
+如果参数是原始类型的值，Object方法返回对应的包装对象的实例（参见《原始类型的包装对象》一节）。
+
+Object() // 返回一个空对象
+Object() instanceof Object // true
+
+Object(undefined) // 返回一个空对象
+Object(undefined) instanceof Object // true
+
+Object(null) // 返回一个空对象
+Object(null) instanceof Object // true
+
+Object(1) // 等同于 new Number(1)
+Object(1) instanceof Object // true
+Object(1) instanceof Number // true
+
+Object('foo') // 等同于 new String('foo')
+Object('foo') instanceof Object // true
+Object('foo') instanceof String // true
+
+Object(true) // 等同于 new Boolean(true)
+Object(true) instanceof Object // true
+Object(true) instanceof Boolean // true
+
+Object对象的静态方法:指的是部署在Object对象自身的方法。
+Object.keys()，Object.getOwnPropertyNames()
+Object.keys方法和Object.getOwnPropertyNames方法很相似，一般用来遍历对象的属性。它们的参数都是一个对象，都返回一个数组，该数
+组的成员都是对象自身的（而不是继承的）所有属性名。它们的区别在于，Object.keys方法只返回可枚举的属性（关于可枚举
+性的详细解释见后文），Object.getOwnPropertyNames方法还返回不可枚举的属性名。
+
+var o = {
+  p1: 123,
+  p2: 456
+};
+
+Object.keys(o)
+// ["p1", "p2"]
+
+Object.getOwnPropertyNames(o)
+// ["p1", "p2"]
+
+上面的代码表示，对于一般的对象来说，这两个方法返回的结果是一样的。只有涉及不可枚举属性时，才会有不一样的结果。
+
+var a = ["Hello", "World"];
+
+Object.keys(a)
+// ["0", "1"]
+
+Object.getOwnPropertyNames(a)
+// ["0", "1", "length"]
+上面代码中，数组的length属性是不可枚举的属性，所以只出现在Object.getOwnPropertyNames方法的返回结果中。
+
+由于JavaScript没有提供计算对象属性个数的方法，所以可以用这两个方法代替。
+
+Object.keys(o).length
+Object.getOwnPropertyNames(o).length
+
+一般情况下，几乎总是使用Object.keys方法，遍历数组的属性。
+
+其他方法:
+1.对象属性模型的相关方法
+Object.getOwnPropertyDescriptor()：获取某个属性的attributes对象。
+Object.defineProperty()：通过attributes对象，定义某个属性。
+Object.defineProperties()：通过attributes对象，定义多个属性。
+Object.getOwnPropertyNames()：返回直接定义在某个对象上面的全部属性的名称。
+
+2.控制对象状态的方法
+Object.preventExtensions()：防止对象扩展。
+Object.isExtensible()：判断对象是否可扩展。
+Object.seal()：禁止对象配置。
+Object.isSealed()：判断一个对象是否可配置。
+Object.freeze()：冻结一个对象。
+Object.isFrozen()：判断一个对象是否被冻结。
+
+3.原型链相关方法:
+Object.create()：该方法可以指定原型对象和属性，返回一个新的对象。
+Object.getPrototypeOf()：获取对象的Prototype对象。
+
+4.Object对象的实例方法
+
+除了Object对象本身的方法,还有不少方法是部署在Object.prototype上的,所有Object的实例对象都继承了这些方法。
+
+Object实例对象的方法，主要有以下六个。
+
+valueOf()：返回当前对象对应的值。
+toString()：返回当前对象对应的字符串形式。
+toLocaleString()：返回当前对象对应的本地字符串形式。
+hasOwnProperty()：判断某个属性是否为当前对象自身的属性，还是继承自原型对象的属性。
+isPrototypeOf()：判断当前对象是否为另一个对象的原型。
+propertyIsEnumerable()：判断某个属性是否可枚举。
+
+Object.prototype.valueOf
+valueOf方法的作用是返回一个对象的“值”，默认情况下返回对象本身。
+
+var o = new Object();
+o.valueOf() === o // true
+上面代码比较o.valueOf()与o本身，两者是一样的。
+
+valueOf方法的主要用途是，JavaScript自动类型转换时会默认调用这个方法（详见《数据类型转换》一节）。
+
+var o = new Object();
+1 + o // "1[object Object]"
+
+上面代码将对象o与数字1相加，这时JavaScript就会默认调用valueOf()方法。所以，如果自定义valueOf方法，就可以得到想要的结果。
+
+var o = new Object();
+o.valueOf = function (){
+  return 2;
+};
+
+1 + o // 3
+
+上面代码自定义了o对象的valueOf方法，于是1 + o就得到了3。这种方法就相当于用o.valueOf覆盖Object.prototype.valueOf。
+
+Object.prototype.toString
+toString方法的作用是返回一个对象的字符串形式，默认情况下返回类型字符串。
+
+var o1 = new Object();
+o1.toString() // "[object Object]"
+
+var o2 = {a:1};
+o2.toString() // "[object Object]"
+上面代码表示，对于一个对象调用toString方法，会返回字符串[object Object]，该字符串说明对象的类型。
+
+字符串[object Object]本身没有太大的用处，但是通过自定义toString方法，可以让对象在自动类型转换时，得到想要的字符串形式。
+
+var o = new Object();
+
+o.toString = function () {
+  return 'hello';
+};
+
+o + ' ' + 'world' // "hello world"
+上面代码表示，当对象用于字符串加法时，会自动调用toString方法。由于自定义了toString方法，所以返回字符串hello world。
+
+数组、字符串、函数、Date对象都分别部署了自己版本的toString方法，覆盖了Object.prototype.toString方法。
+
+[1, 2, 3].toString() // "1,2,3"
+
+'123'.toString() // "123"
+
+(function () {
+  return 123;
+}).toString()
+// "function () {
+//   return 123;
+// }"
+
+(new Date()).toString()
+// "Tue May 10 2016 09:11:31 GMT+0800 (CST)"
+
+toString()的应用:数据类型的判断
+
+Object.prototype.toString方法返回对象的类型字符串.因此可以用来判断一个值的类型。
+
+var o = {};
+o.toString() // "[object Object]"
+上面代码调用空对象的toString方法，结果返回一个字符串object Object，其中第二个Object表示该值的构造函数。这是一个十分有用的判断数据类型的方法。
+
+实例对象可能会自定义toString方法，覆盖掉Object.prototype.toString方法。通过函数的call方法，可以在任意值上调用Object.prototype.toString方法，帮助我们判断这个值的类型。
+
+Object.prototype.toString.call(value)
+
+不同数据类型的Object.prototype.toString方法返回值如下。
+
+数值：返回[object Number]。
+字符串：返回[object String]。
+布尔值：返回[object Boolean]。
+undefined：返回[object Undefined]。
+null：返回[object Null]。
+数组：返回[object Array]。
+arguments对象：返回[object Arguments]。
+函数：返回[object Function]。
+Error对象：返回[object Error]。
+Date对象：返回[object Date]。
+RegExp对象：返回[object RegExp]。
+其他对象：返回[object Object]。
+
+也就是说，Object.prototype.toString可以得到一个实例对象的构造函数。
+
+Object.prototype.toString.call(2) // "[object Number]"
+Object.prototype.toString.call('') // "[object String]"
+Object.prototype.toString.call(true) // "[object Boolean]"
+Object.prototype.toString.call(undefined) // "[object Undefined]"
+Object.prototype.toString.call(null) // "[object Null]"
+Object.prototype.toString.call(Math) // "[object Math]"
+Object.prototype.toString.call({}) // "[object Object]"
+Object.prototype.toString.call([]) // "[object Array]"
+
+

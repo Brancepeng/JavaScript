@@ -1,0 +1,147 @@
+1.构造函数:
+Array是JavaScript的内置对象,同时也是一个构造函数.可以用它生成新的数组.
+
+var arr = new Array(2);
+arr.length // 2
+arr // [ undefined x 2 ]
+
+上面代码中，Array构造函数的参数2，表示生成一个两个成员的数组，每个位置都是空值。
+
+如果没有使用new，运行结果也是一样的。
+
+var arr = new Array(2);
+// 等同于
+var arr = Array(2);
+
+
+2.Array.isArray();
+Array.isArray方法用来判断一个值是否为数组。它可以弥补typeof运算符的不足。
+
+typeof a // "object"
+Array.isArray(a) // true
+上面代码中，typeof运算符只能显示数组的类型是Object，而Array.isArray方法可以对数组返回true。
+
+Array的实例方法
+
+valueOf()，toString()
+valueOf方法返回数组本身。
+
+var a = [1, 2, 3];
+a.valueOf() // [1, 2, 3]
+
+toString方法返回数组的字符串形式。
+
+var a = [1, 2, 3];
+a.toString() // "1,2,3"
+
+var a = [1, 2, 3, [4, 5, 6]];
+a.toString() // "1,2,3,4,5,6"
+
+push()
+push方法用于在数组的末端添加一个或多个元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组。
+var a = [];
+
+a.push(1) // 1
+a.push('a') // 2
+a.push(true, {}) // 4
+a // [1, 'a', true, {}]
+
+如果需要合并两个数组，可以这样写。
+
+var a = [1, 2, 3];
+var b = [4, 5, 6];
+
+Array.prototype.push.apply(a, b)
+// 或者
+a.push.apply(a, b)
+
+// 上面两种写法等同于
+a.push(4, 5, 6)
+
+a // [1, 2, 3, 4, 5, 6]
+
+pop()
+pop方法用于删除数组的最后一个元素，并返回该元素。注意，该方法会改变原数组。
+var a = ['a', 'b', 'c'];
+
+a.pop() // 'c'
+a // ['a', 'b']
+
+对空数组使用pop方法，不会报错，而是返回undefined。
+
+[].pop() // undefined
+push和pop结合使用，就构成了“后进先出”的栈结构（stack）。
+
+join()方法
+join方法以参数作为分隔符，将所有数组成员组成一个字符串返回。如果不提供参数，默认用逗号分隔。
+
+var a = [1, 2, 3, 4];
+
+a.join(' ') // '1 2 3 4'
+a.join(' | ') // "1 | 2 | 3 | 4"
+a.join() // "1,2,3,4"
+
+通过call方法，这个方法也可以用于字符串。
+
+Array.prototype.join.call('hello', '-')
+// "h-e-l-l-o"
+
+concat()方法
+concat方法用于多个数组的合并。它将新数组的成员，添加到原数组的尾部，然后返回一个新数组，原数组不变。
+
+['hello'].concat(['world'])
+// ["hello", "world"]
+
+['hello'].concat(['world'], ['!'])
+// ["hello", "world", "!"]
+
+concat方法也可以用于将对象合并为数组，但是必须借助call方法。
+
+[].concat.call({a: 1}, {b: 2})
+// [{ a: 1 }, { b: 2 }]
+
+[].concat.call({a: 1}, [2])
+// [{a: 1}, 2]
+
+[2].concat({a: 1})
+// [2, {a: 1}]
+
+shift()方法
+shift方法用于删除数组的第一个元素，并返回该元素。注意，该方法会改变原数组。
+
+var a = ['a', 'b', 'c'];
+
+a.shift() // 'a'
+a // ['b', 'c']
+shift方法可以遍历并清空一个数组。
+
+var list = [1, 2, 3, 4, 5, 6];
+var item;
+
+while (item = list.shift()) {
+  console.log(item);
+}
+
+list // []
+push和shift结合使用，就构成了“先进先出”的队列结构（queue）。
+
+unshift()
+unshift方法用于在数组的第一个位置添加元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组。
+
+var a = ['a', 'b', 'c'];
+
+a.unshift('x'); // 4
+a // ['x', 'a', 'b', 'c']
+unshift方法可以在数组头部添加多个元素。
+
+var arr = [ 'c', 'd' ];
+arr.unshift('a', 'b') // 4
+arr // [ 'a', 'b', 'c', 'd' ]
+reverse()
+reverse方法用于颠倒数组中元素的顺序，返回改变后的数组。注意，该方法将改变原数组。
+
+var a = ['a', 'b', 'c'];
+
+a.reverse() // ["c", "b", "a"]
+a // ["c", "b", "a"]
+
